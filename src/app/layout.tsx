@@ -16,17 +16,20 @@ export default function RootLayout({
     <html lang="fr">
       <body>
         <main className="">
-          <header>
+          <header className="flex px-6 py-4">
             <Image
               src={logoImage}
               alt="Logo"
               width={42}
               height={42}
               priority
+              className="mr-2"
             />
-            <h1>NumIMDB</h1>
+            <h1 className="my-auto text-xl">NumIMDB</h1>
           </header>
-          {children}
+          <div className="p-6">
+            {children}
+          </div>
         </main>
       </body>
     </html>

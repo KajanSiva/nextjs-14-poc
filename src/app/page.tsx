@@ -39,8 +39,8 @@ export default async function Home() {
 
   return (
     <div>
-      <h2>Les plus populaires</h2>
-      <div>
+      <h2 className="text-2xl mb-8">Les plus populaires</h2>
+      <div className="container flex flex-wrap gap-4 justify-start">
         {movies.map((movie) => (
           <MovieCard key={movie.id} movie={movie} />
         ))}
