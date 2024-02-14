@@ -27,7 +27,7 @@ async function fetchWithAuth<T>(url: string): Promise<T> {
 }
 
 async function getData(currentPage: number): Promise<PopularMoviesResult> {
-  const popularMoviesUrl = `${process.env.API_URL}/3/movie/popular?language=fr-FR&page=${currentPage}`
+  const popularMoviesUrl = `${process.env.API_URL}/3/discover/movie?include_adult=false&include_video=false&language=fr-FR&page=${currentPage}`
   const genresUrl = `${process.env.API_URL}/3/genre/movie/list`
 
   const [moviesResult, genresResult] = await Promise.all([
