@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import { MovieListItem } from "@/types/movies"
 import { DisplayMode } from '@/types/ui'
+import Link from 'next/link'
 
 type MovieCardProps = {
   movie: MovieListItem,
@@ -21,7 +22,7 @@ export default function MovieCard({ movie, displayMode }: MovieCardProps) {
   }
 
   return (
-    <div className={displayMode === 'grid' ? gridDisplayModeClasses.wrapper : listDisplayModeClasses.wrapper}>
+    <Link href={`/movies/${movie.id}`} className={displayMode === 'grid' ? gridDisplayModeClasses.wrapper : listDisplayModeClasses.wrapper}>
       <div className={displayMode === 'grid' ? gridDisplayModeClasses.image : listDisplayModeClasses.image}>
         <Image
           src={posterUrl}
@@ -39,6 +40,6 @@ export default function MovieCard({ movie, displayMode }: MovieCardProps) {
         </div>
         <p>Rating : {movie.vote_average.toFixed(2)}/10</p>
       </div>
-    </div>
+    </Link>
   )
 }

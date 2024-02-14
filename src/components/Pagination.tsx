@@ -12,7 +12,7 @@ type DestinationPage = 'first' | 'previous' | 'next' | 'last'
 export default function Pagination({ currentPage, totalPages }: PaginationProps) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  const { replace } = useRouter();
+  const { push } = useRouter();
 
   const isFirstPage = currentPage === 1
   const isLastPage = currentPage === totalPages
@@ -39,7 +39,7 @@ export default function Pagination({ currentPage, totalPages }: PaginationProps)
 
     params.set('page', newPageValue.toString());
 
-    replace(`${pathname}?${params.toString()}`);
+    push(`${pathname}?${params.toString()}`);
   }
   
   return (

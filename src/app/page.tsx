@@ -3,6 +3,7 @@ import MovieList from "@/components/MovieList"
 import Pagination from "@/components/Pagination"
 import { PopularMoviesRawResult, Genre, MovieListItem, MovieGenresResult, RawMovieListItem, PopularMoviesResult } from "@/types/movies"
 import { DisplayMode } from "@/types/ui"
+import { defaultLanguage, fetchWithAuth } from "@/utils/dataFetching"
 
 function addGenreDetailsToMovieResults(movies: RawMovieListItem[], genres: Genre[]): MovieListItem[] {
   const genreMap: { [key: number]: string } = genres.reduce((map: { [key: number]: string }, genre) => {
@@ -18,17 +19,9 @@ function addGenreDetailsToMovieResults(movies: RawMovieListItem[], genres: Genre
   }));
 }
 
-async function fetchWithAuth<T>(url: string): Promise<T> {
-  const response = await fetch(url, {
-    headers: { Authorization: `Bearer ${process.env.API_TOKEN}` }
-  });
-  if (!response.ok) throw new Error('Failed to fetch data');
-  return response.json()
-}
-
 async function getData(currentPage: number): Promise<PopularMoviesResult> {
-  const popularMoviesUrl = `${process.env.API_URL}/3/discover/movie?include_adult=false&include_video=false&language=fr-FR&page=${currentPage}`
-  const genresUrl = `${process.env.API_URL}/3/genre/movie/list`
+  const popularMoviesUrl = `${process.env.API_URL}/3/discover/movie?include_adult=false&include_video=false&language=${defaultLanguage}&page=${currentPage}`
+  const genresUrl = `${process.env.API_URL}/3/genre/movie/list?language=${defaultLanguage}`
 
   const [moviesResult, genresResult] = await Promise.all([
     fetchWithAuth<PopularMoviesRawResult>(popularMoviesUrl),
