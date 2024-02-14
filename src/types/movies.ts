@@ -1,4 +1,4 @@
-export type Movie = {
+export type RawMovieListItem = {
   "adult": boolean,
   "backdrop_path": string,
   "genre_ids": number[],
@@ -15,9 +15,22 @@ export type Movie = {
   "vote_count": number
 }
 
-export type FavoriteMoviesResult = {
+export type MovieListItem = RawMovieListItem & {
+  genres: Genre[]
+}
+
+export type PopularMoviesResult = {
   "page": number,
-  "results": Movie[],
+  "results": RawMovieListItem[],
   "total_pages": number,
   "total_results": number
+}
+
+export type Genre = {
+  id: number,
+  name: string
+}
+
+export type MovieGenresResult = {
+  genres: Genre[]
 }
