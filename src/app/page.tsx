@@ -1,6 +1,8 @@
+import DisplaySwitch from "@/components/DisplaySwitch"
 import MovieList from "@/components/MovieList"
 import Pagination from "@/components/Pagination"
 import { PopularMoviesRawResult, Genre, MovieListItem, MovieGenresResult, RawMovieListItem, PopularMoviesResult } from "@/types/movies"
+import { DisplayMode } from "@/types/ui"
 
 function addGenreDetailsToMovieResults(movies: RawMovieListItem[], genres: Genre[]): MovieListItem[] {
   const genreMap: { [key: number]: string } = genres.reduce((map: { [key: number]: string }, genre) => {
@@ -43,19 +45,24 @@ async function getData(currentPage: number): Promise<PopularMoviesResult> {
 
 type HomeProps = {
   searchParams?: {
-    page?: string
+    page?: string,
+    display?: DisplayMode
   }
 }
 
 export default async function Home({ searchParams }: HomeProps) {
-  const currentPage = Number(searchParams?.page) || 1;
+  const currentPage = Number(searchParams?.page) || 1
+  const displayMode = searchParams?.display || 'grid'
 
   const { results: movies, totalPages } = await getData(currentPage)
 
   return (
     <div>
       <h2 className="text-2xl mb-8">Les plus populaires</h2>
-      <MovieList movies={movies} />
+      <div className="flex justify-end">
+        <DisplaySwitch displayMode={displayMode} />
+      </div>
+      <MovieList movies={movies} displayMode={displayMode} />
       <Pagination currentPage={currentPage} totalPages={totalPages} />
     </div>
   );
