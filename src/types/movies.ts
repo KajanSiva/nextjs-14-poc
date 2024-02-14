@@ -19,12 +19,20 @@ export type MovieListItem = RawMovieListItem & {
   genres: Genre[]
 }
 
-export type PopularMoviesResult = {
+export type PopularMoviesRawResult = {
   "page": number,
   "results": RawMovieListItem[],
   "total_pages": number,
   "total_results": number
 }
+
+export type PopularMoviesResult = {
+  "page": number,
+  "results": MovieListItem[],
+  "totalPages": number,
+  "totalResults": number
+}
+
 
 export type Genre = {
   id: number,

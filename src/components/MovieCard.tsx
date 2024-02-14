@@ -15,6 +15,7 @@ export default function MovieCard({ movie }: MovieCardProps) {
           src={posterUrl}
           alt={`${movie.title} movie poster`}
           fill
+          unoptimized
         />
       </div>
       <p className='text-lg'>{movie.title}</p>

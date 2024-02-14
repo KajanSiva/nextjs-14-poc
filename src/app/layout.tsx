@@ -15,7 +15,7 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body>
-        <main className="">
+        <main>
           <header className="flex px-6 py-4">
             <Image
               src={logoImage}

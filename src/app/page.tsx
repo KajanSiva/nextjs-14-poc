@@ -1,5 +1,6 @@
-import MovieCard from "@/components/MovieCard"
-import { PopularMoviesResult, Genre, MovieListItem, MovieGenresResult, RawMovieListItem } from "@/types/movies"
+import MovieList from "@/components/MovieList"
+import Pagination from "@/components/Pagination"
+import { PopularMoviesRawResult, Genre, MovieListItem, MovieGenresResult, RawMovieListItem, PopularMoviesResult } from "@/types/movies"
 
 function addGenreDetailsToMovieResults(movies: RawMovieListItem[], genres: Genre[]): MovieListItem[] {
   const genreMap: { [key: number]: string } = genres.reduce((map: { [key: number]: string }, genre) => {
@@ -15,7 +16,7 @@ function addGenreDetailsToMovieResults(movies: RawMovieListItem[], genres: Genre
   }));
 }
 
-async function fetchWithAuth(url: string): Promise<any> {
+async function fetchWithAuth<T>(url: string): Promise<T> {
   const response = await fetch(url, {
     headers: { Authorization: `Bearer ${process.env.API_TOKEN}` }
   });
@@ -23,28 +24,39 @@ async function fetchWithAuth(url: string): Promise<any> {
   return response.json()
 }
 
-async function getData() {
-  const popularMoviesUrl = `${process.env.API_URL}/3/movie/popular?language=fr-FR&page=1`
+async function getData(currentPage: number): Promise<PopularMoviesResult> {
+  const popularMoviesUrl = `${process.env.API_URL}/3/movie/popular?language=fr-FR&page=${currentPage}`
   const genresUrl = `${process.env.API_URL}/3/genre/movie/list`
 
-  const [moviesResult, genresResult]: [PopularMoviesResult, MovieGenresResult] = await Promise.all([
-    fetchWithAuth(popularMoviesUrl),
-    fetchWithAuth(genresUrl)
+  const [moviesResult, genresResult] = await Promise.all([
+    fetchWithAuth<PopularMoviesRawResult>(popularMoviesUrl),
+    fetchWithAuth<MovieGenresResult>(genresUrl)
   ]);
 
-  return addGenreDetailsToMovieResults(moviesResult.results, genresResult.genres)
+  return {
+    page: moviesResult.page,
+    totalPages: Math.min(moviesResult.total_pages, 500), // The API doesn't work with more than 500 pages.
+    totalResults: moviesResult.total_results,
+    results: addGenreDetailsToMovieResults(moviesResult.results, genresResult.genres)
+  }
 }
-export default async function Home() {
-  const movies = await getData()
+
+type HomeProps = {
+  searchParams?: {
+    page?: string
+  }
+}
+
+export default async function Home({ searchParams }: HomeProps) {
+  const currentPage = Number(searchParams?.page) || 1;
+
+  const { results: movies, totalPages } = await getData(currentPage)
 
   return (
     <div>
       <h2 className="text-2xl mb-8">Les plus populaires</h2>
-      <div className="container flex flex-wrap gap-4 justify-start">
-        {movies.map((movie) => (
-          <MovieCard key={movie.id} movie={movie} />
-        ))}
-      </div>
+      <MovieList movies={movies} />
+      <Pagination currentPage={currentPage} totalPages={totalPages} />
     </div>
   );
 }
