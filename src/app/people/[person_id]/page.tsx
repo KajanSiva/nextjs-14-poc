@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import { DetailedPerson } from "@/types/movies";
 import { defaultLanguage, fetchWithAuth } from "@/utils/dataFetching";
+import Slider from '@/components/Slider';
 
 async function getData(personId: number): Promise<DetailedPerson> {
   const personDetailUrl = `${process.env.API_URL}/3/person/${personId}?language=${defaultLanguage}&append_to_response=credits`
@@ -26,6 +27,12 @@ export default async function PersonDetail({ params }: PersonDetailProps) {
   let credits = [...person.credits.cast, ...person.credits.crew]
   credits = credits.slice(0, 5)
 
+  const formattedCredits = credits.map((credit) => ({
+    image: credit.poster_path,
+    id: credit.id,
+    content: credit.title,
+  }))
+
   return (
     <div>
       <h2 className="text-2xl mb-8">{person.name}</h2>
@@ -45,6 +52,9 @@ export default async function PersonDetail({ params }: PersonDetailProps) {
           <p><a className='text-blue-400' href={`https://www.imdb.com/name/${person.imdb_id}`} target='_blank'>Lien vers la page IMDB de la personne</a></p>
         </div>
       </div>
+
+      <h3 className="text-xl mb-4">Connu pour</h3>
+      <Slider data={formattedCredits} linkPath='/movies/' />
     </div>
   );
 }
