@@ -4,6 +4,7 @@ import { DisplayMode } from '@/types/ui'
 import Link from 'next/link'
 import Rating from './Rating'
 import { constructFullImageUrl } from '@/utils/MovieService'
+import clsx from 'clsx'
 
 type MovieCardProps = {
   movie: MovieListItem,
@@ -13,19 +14,20 @@ type MovieCardProps = {
 export default function MovieCard({ movie, displayMode }: MovieCardProps) {
   const posterUrl = constructFullImageUrl(movie.poster_path)
 
-  const gridDisplayModeClasses = {
-    wrapper: 'border-gray-700 border-2 rounded w-[300px] p-4',
-    image: 'w-[160px] h-[250px] relative mx-auto mb-4 shrink-0'
-  }
-
-  const listDisplayModeClasses = {
-    wrapper: 'flex justify-start border-gray-700 border-b-2 rounded p-4',
-    image: 'w-[160px] h-[250px] relative mr-8 shrink-0'
-  }
-
   return (
-    <Link href={`/movies/${movie.id}`} className={displayMode === 'grid' ? gridDisplayModeClasses.wrapper : listDisplayModeClasses.wrapper}>
-      <div className={displayMode === 'grid' ? gridDisplayModeClasses.image : listDisplayModeClasses.image}>
+    <Link
+      href={`/movies/${movie.id}`}
+      className={clsx(
+        'border-gray-700 p-4',
+        displayMode === 'grid' && 'rounded w-[300px] border-2',
+        displayMode === 'list' && 'flex justify-start border-b-2',
+      )}
+    >
+      <div className={clsx(
+        'w-[160px] h-[250px] relative shrink-0',
+        displayMode === 'grid' && 'mx-auto mb-4',
+        displayMode === 'list' && 'mr-8',
+      )}>
         {posterUrl ?
           <Image
             src={posterUrl}
