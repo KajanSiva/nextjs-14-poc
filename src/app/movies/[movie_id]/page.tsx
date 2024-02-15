@@ -2,6 +2,7 @@ import Image from 'next/image'
 import { DetailedMovie } from "@/types/movies";
 import { defaultLanguage, fetchWithAuth } from "@/utils/dataFetching";
 import Slider from '@/components/Slider';
+import Rating from '@/components/Rating';
 
 async function getData(movieId: number): Promise<DetailedMovie> {
   const movieDetailUrl = `${process.env.API_URL}/3/movie/${movieId}?language=${defaultLanguage}&append_to_response=credits`
@@ -59,7 +60,7 @@ export default async function MovieDetail({ params }: MovieDetailProps) {
           {movie.homepage ? <p><a className='text-blue-400' href={movie.homepage} target='_blank'>Lien vers le site du film</a></p> : null}
           <p><a className='text-blue-400' href={`https://www.imdb.com/title/${movie.imdb_id}`} target='_blank'>Lien vers la page IMDB du film</a></p>
 
-          <p>Rating : {movie.vote_average.toFixed(2)} / 10</p>
+          <Rating voteAverage={movie.vote_average} voteCount={movie.vote_count} />
         </div>
       </div>
 

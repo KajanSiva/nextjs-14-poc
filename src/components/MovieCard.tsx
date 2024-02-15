@@ -2,6 +2,7 @@ import Image from 'next/image'
 import { MovieListItem } from "@/types/movies"
 import { DisplayMode } from '@/types/ui'
 import Link from 'next/link'
+import Rating from './Rating'
 
 type MovieCardProps = {
   movie: MovieListItem,
@@ -40,7 +41,7 @@ export default function MovieCard({ movie, displayMode }: MovieCardProps) {
             <span key={genre.id}>{genre.name}</span>
           ))}
         </div>
-        <p>Rating : {movie.vote_average.toFixed(2)}/10</p>
+        <Rating voteAverage={movie.vote_average} voteCount={movie.vote_count} />
       </div>
     </Link>
   )
