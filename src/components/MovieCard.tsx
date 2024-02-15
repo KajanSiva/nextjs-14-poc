@@ -15,12 +15,12 @@ export default function MovieCard({ movie, displayMode }: MovieCardProps) {
 
   const gridDisplayModeClasses = {
     wrapper: 'border-gray-700 border-2 rounded w-[300px] p-4',
-    image: 'w-[160px] h-[250px] relative mx-auto mb-4'
+    image: 'w-[160px] h-[250px] relative mx-auto mb-4 shrink-0'
   }
 
   const listDisplayModeClasses = {
     wrapper: 'flex justify-start border-gray-700 border-b-2 rounded p-4',
-    image: 'w-[160px] h-[250px] relative mr-8'
+    image: 'w-[160px] h-[250px] relative mr-8 shrink-0'
   }
 
   return (

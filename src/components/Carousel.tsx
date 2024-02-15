@@ -45,16 +45,16 @@ export default function Carousel({ data, linkPath }: CarouselProps) {
   }, [emblaApi, onSelect])
 
   return (
-    <div className='flex items-center gap-6'>
+    <div className='flex items-center gap-6 -mx-6 md:mx-0'>
       <button
         disabled={prevBtnDisabled}
-        className='shrink-0 bg-gray-700 text-white text-lg rounded w-[40px] h-[40px]'
+        className='shrink-0 bg-gray-700 text-white text-lg rounded w-[40px] h-[40px] hidden md:block'
         onClick={scrollPrev}
       >
         {'<'}
       </button>
       <div className='overflow-hidden' ref={emblaRef}>
-        <div className='flex gap-4'>
+        <div className='flex gap-4 mx-4 md:mx-0'>
           {data.map((dataItem) => {
             return (
               <Link key={dataItem.id} className='w-[160px] h-[220px] relative group shrink-0' href={`${linkPath}${dataItem.id}`}>
@@ -81,7 +81,7 @@ export default function Carousel({ data, linkPath }: CarouselProps) {
       </div>
       <button
         disabled={nextBtnDisabled}
-        className='shrink-0 bg-gray-700 text-white text-lg rounded w-[40px] h-[40px]'
+        className='shrink-0 bg-gray-700 text-white text-lg rounded w-[40px] h-[40px] hidden md:block'
         onClick={scrollNext}
       >
         {'>'}

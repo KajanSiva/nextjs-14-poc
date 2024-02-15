@@ -8,7 +8,7 @@ type MovieListProps = {
 }
 
 export default function MovieList({ movies, displayMode }: MovieListProps) {
-  const gridClasses = 'flex flex-wrap gap-4 justify-start mb-6'
+  const gridClasses = 'flex my-6 flex-col md:flex-row md:flex-wrap md:gap-x-4 md:items-stretch gap-y-4 items-center'
   const listClasses = 'flex flex-col gap-4 mb-6'
 
   return (

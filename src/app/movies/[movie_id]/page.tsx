@@ -43,8 +43,8 @@ export default async function MovieDetail({ params }: MovieDetailProps) {
     <div>
       <h2 className="text-2xl mb-8">{movie.title} ({releaseYear}) - {genresString}</h2>
 
-      <div className='flex justify-start mb-8'>
-        <div className="w-[160px] h-[250px] relative mr-8 shrink-0">
+      <div className='flex flex-col md:flex-row justify-start mb-8'>
+        <div className="w-[160px] h-[250px] relative md:mr-8 shrink-0 mb-6 md:mb-0 mx-auto md:mx-0">
           {posterUrl ?
             <Image
               src={posterUrl}

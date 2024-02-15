@@ -43,7 +43,7 @@ export default function Pagination({ currentPage, totalPages }: PaginationProps)
   }
   
   return (
-    <div className="flex justify-end gap-4">
+    <div className="flex justify-center md:justify-end gap-4">
       <button disabled={isFirstPage} onClick={() => updatePage('first')}>{'<<'}</button>
       <button disabled={isFirstPage} onClick={() => updatePage('previous')}>{'<'}</button>
       <p>Page {currentPage} sur {totalPages}</p>

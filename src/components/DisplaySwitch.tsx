@@ -23,7 +23,7 @@ export default function DisplaySwitch({ displayMode }: DisplaySwitchProps) {
   }
 
   return (
-    <div className="flex gap-2">
+    <div className="md:flex gap-2 hidden">
       <div data-testid="list-icon" className={displayMode === 'list' ? 'bg-slate-400' : '' } onClick={() => updateDisplayMode('list')}>
         <BarsIcon />
       </div>
