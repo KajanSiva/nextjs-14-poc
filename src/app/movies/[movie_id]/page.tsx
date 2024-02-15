@@ -1,16 +1,8 @@
 import Image from 'next/image'
-import { DetailedMovie } from "@/types/movies";
-import { defaultLanguage, fetchWithAuth } from "@/utils/dataFetching";
 import Carousel from '@/components/Carousel';
 import Rating from '@/components/Rating';
-
-async function getData(movieId: number): Promise<DetailedMovie> {
-  const movieDetailUrl = `${process.env.API_URL}/3/movie/${movieId}?language=${defaultLanguage}&append_to_response=credits`
-
-  const movie = await fetchWithAuth<DetailedMovie>(movieDetailUrl);
-
-  return movie
-}
+import { constructFullImageUrl, fetchMovie } from '@/utils/MovieService';
+import { DetailedMovie } from '@/types/movies';
 
 type MovieDetailProps = {
   params: {
@@ -18,14 +10,7 @@ type MovieDetailProps = {
   }
 }
 
-export default async function MovieDetail({ params }: MovieDetailProps) {
-  const movieId = Number(params.movie_id)
-
-  const movie = await getData(movieId)
-
-  const releaseYear = movie.release_date.slice(0, 4)
-  const genresString = movie.genres.map((genre) => genre.name).join(', ')
-  const posterUrl = `${process.env.API_IMAGE_URL}/${process.env.API_IMAGE_POSTER_SIZE}/${movie.poster_path}`
+function prepareCreditsData(movie: DetailedMovie) {
   const director = movie.credits.crew.find((member) => member.job === 'Director');
 
   const credits = []
@@ -35,10 +20,24 @@ export default async function MovieDetail({ params }: MovieDetailProps) {
   credits.push(...movie.credits.cast)
 
   const formattedCredits = credits.map((credit) => ({
-    image: credit.profile_path ? `${process.env.API_IMAGE_URL}/${process.env.API_IMAGE_POSTER_SIZE}/${credit.profile_path}` : null,
+    image: constructFullImageUrl(credit.profile_path),
     id: credit.id,
     content: credit.name,
   }))
+
+  return formattedCredits
+}
+
+export default async function MovieDetail({ params }: MovieDetailProps) {
+  const movieId = Number(params.movie_id)
+
+  const movie = await fetchMovie(movieId)
+
+  const releaseYear = movie.release_date.slice(0, 4)
+  const genresString = movie.genres.map((genre) => genre.name).join(', ')
+  const posterUrl = constructFullImageUrl(movie.poster_path)
+  
+  const credits = prepareCreditsData(movie)
 
   return (
     <div>
@@ -46,13 +45,15 @@ export default async function MovieDetail({ params }: MovieDetailProps) {
 
       <div className='flex justify-start mb-8'>
         <div className="w-[160px] h-[250px] relative mr-8 shrink-0">
-          <Image
-            src={posterUrl}
-            alt={`${movie.title} movie poster`}
-            fill
-            style={{objectFit:"contain"}}
-            unoptimized
-            />
+          {posterUrl ?
+            <Image
+              src={posterUrl}
+              alt={`${movie.title} movie poster`}
+              fill
+              style={{objectFit:"contain"}}
+              unoptimized
+            /> : null
+          }
         </div>
         <div className='shrink'>
           <p>{movie.tagline}</p>
@@ -65,7 +66,7 @@ export default async function MovieDetail({ params }: MovieDetailProps) {
       </div>
 
       <h3 className="text-xl mb-4">Crédits</h3>
-      <Carousel data={formattedCredits} linkPath='/people/' />
+      <Carousel data={credits} linkPath='/people/' />
     </div>
   );
 }

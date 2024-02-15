@@ -1,15 +1,7 @@
 import Image from 'next/image'
 import { DetailedPerson, MovieParticipedAsCast, MovieParticipedAsCrew } from "@/types/movies";
-import { defaultLanguage, fetchWithAuth } from "@/utils/dataFetching";
 import Carousel from '@/components/Carousel';
-
-async function getData(personId: number): Promise<DetailedPerson> {
-  const personDetailUrl = `${process.env.API_URL}/3/person/${personId}?language=${defaultLanguage}&append_to_response=credits`
-
-  const person = await fetchWithAuth<DetailedPerson>(personDetailUrl);
-
-  return person
-}
+import { constructFullImageUrl, fetchPerson } from '@/utils/MovieService';
 
 type PersonDetailProps = {
   params: {
@@ -17,6 +9,7 @@ type PersonDetailProps = {
   }
 }
 
+// Some persons can be both in cast and crew of a movie
 function deduplicatedCredits(credits: (MovieParticipedAsCast | MovieParticipedAsCrew)[]) {
   const uniqueIds: {
     [key: string]: boolean;
@@ -33,21 +26,27 @@ function deduplicatedCredits(credits: (MovieParticipedAsCast | MovieParticipedAs
   return deduplicatedCredits
 }
 
-export default async function PersonDetail({ params }: PersonDetailProps) {
-  const personId = Number(params.person_id)
-
-  const person = await getData(personId)
-
-  const photoUrl = `${process.env.API_IMAGE_URL}/${process.env.API_IMAGE_POSTER_SIZE}/${person.profile_path}`
-
+function prepareCreditsData(person: DetailedPerson) {
   let credits = [...person.credits.cast, ...person.credits.crew]
   credits = deduplicatedCredits(credits)
 
   const formattedCredits = credits.map((credit) => ({
-    image: credit.poster_path ? `${process.env.API_IMAGE_URL}/${process.env.API_IMAGE_POSTER_SIZE}/${credit.poster_path}` : null,
+    image: constructFullImageUrl(credit.poster_path),
     id: credit.id,
     content: credit.title,
   }))
+
+  return formattedCredits
+}
+
+export default async function PersonDetail({ params }: PersonDetailProps) {
+  const personId = Number(params.person_id)
+
+  const person = await fetchPerson(personId)
+
+  const photoUrl = constructFullImageUrl(person.profile_path)
+
+  const credits = prepareCreditsData(person)
 
   return (
     <div>
@@ -55,13 +54,15 @@ export default async function PersonDetail({ params }: PersonDetailProps) {
 
       <div className='flex justify-start mb-8'>
         <div className="w-[160px] h-[250px] relative mr-8 shrink-0">
-          <Image
-            src={photoUrl}
-            alt={person.name}
-            fill
-            style={{objectFit:"contain"}}
-            unoptimized
-            />
+          {photoUrl ?
+            <Image
+              src={photoUrl}
+              alt={person.name}
+              fill
+              style={{objectFit:"contain"}}
+              unoptimized
+            /> : null
+          }
         </div>
         <div className='shrink'>
           <p>{person.birthday} - {person.place_of_birth}</p>
@@ -74,7 +75,7 @@ export default async function PersonDetail({ params }: PersonDetailProps) {
       </div>
 
       <h3 className="text-xl mb-4">Connu pour</h3>
-      <Carousel data={formattedCredits} linkPath='/movies/' />
+      <Carousel data={credits} linkPath='/movies/' />
     </div>
   );
 }

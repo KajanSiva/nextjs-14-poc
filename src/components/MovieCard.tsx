@@ -3,6 +3,7 @@ import { MovieListItem } from "@/types/movies"
 import { DisplayMode } from '@/types/ui'
 import Link from 'next/link'
 import Rating from './Rating'
+import { constructFullImageUrl } from '@/utils/MovieService'
 
 type MovieCardProps = {
   movie: MovieListItem,
@@ -10,7 +11,7 @@ type MovieCardProps = {
 }
 
 export default function MovieCard({ movie, displayMode }: MovieCardProps) {
-  const posterUrl = movie.poster_path ? `${process.env.API_IMAGE_URL}/${process.env.API_IMAGE_POSTER_SIZE}/${movie.poster_path}` : null
+  const posterUrl = constructFullImageUrl(movie.poster_path)
 
   const gridDisplayModeClasses = {
     wrapper: 'border-gray-700 border-2 rounded w-[300px] p-4',
