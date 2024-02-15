@@ -48,6 +48,7 @@ export default function Carousel({ data, linkPath }: CarouselProps) {
   return (
     <div className='flex items-center gap-6 -mx-6 md:mx-0'>
       <Button
+        className="hidden md:block"
         disabled={prevBtnDisabled}
         onClick={scrollPrev}
       >
@@ -80,6 +81,7 @@ export default function Carousel({ data, linkPath }: CarouselProps) {
         </div>
       </div>
       <Button
+        className="hidden md:block"
         disabled={nextBtnDisabled}
         onClick={scrollNext}
       >
