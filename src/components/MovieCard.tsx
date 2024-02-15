@@ -9,7 +9,7 @@ type MovieCardProps = {
 }
 
 export default function MovieCard({ movie, displayMode }: MovieCardProps) {
-  const posterUrl = `${process.env.API_IMAGE_URL}/${process.env.API_IMAGE_POSTER_SIZE}/${movie.poster_path}`
+  const posterUrl = movie.poster_path ? `${process.env.API_IMAGE_URL}/${process.env.API_IMAGE_POSTER_SIZE}/${movie.poster_path}` : null
 
   const gridDisplayModeClasses = {
     wrapper: 'border-gray-700 border-2 rounded w-[300px] p-4',
@@ -24,12 +24,14 @@ export default function MovieCard({ movie, displayMode }: MovieCardProps) {
   return (
     <Link href={`/movies/${movie.id}`} className={displayMode === 'grid' ? gridDisplayModeClasses.wrapper : listDisplayModeClasses.wrapper}>
       <div className={displayMode === 'grid' ? gridDisplayModeClasses.image : listDisplayModeClasses.image}>
-        <Image
-          src={posterUrl}
-          alt={`${movie.title} movie poster`}
-          fill
-          unoptimized
-        />
+        {posterUrl ?
+          <Image
+            src={posterUrl}
+            alt={`${movie.title} movie poster`}
+            fill
+            unoptimized
+          /> : null
+        }
       </div>
       <div>
         <p className='text-lg'>{movie.title}</p>

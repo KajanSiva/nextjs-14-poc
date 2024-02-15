@@ -1,8 +1,9 @@
 import DisplaySwitch from "@/components/DisplaySwitch"
 import MovieList from "@/components/MovieList"
 import Pagination from "@/components/Pagination"
+import SortDropdown from "@/components/SortDropdown"
 import { PopularMoviesRawResult, Genre, MovieListItem, MovieGenresResult, RawMovieListItem, PopularMoviesResult } from "@/types/movies"
-import { DisplayMode } from "@/types/ui"
+import { DisplayMode, SortCriteria } from "@/types/ui"
 import { defaultLanguage, fetchWithAuth } from "@/utils/dataFetching"
 
 function addGenreDetailsToMovieResults(movies: RawMovieListItem[], genres: Genre[]): MovieListItem[] {
@@ -19,8 +20,19 @@ function addGenreDetailsToMovieResults(movies: RawMovieListItem[], genres: Genre
   }));
 }
 
-async function getData(currentPage: number): Promise<PopularMoviesResult> {
-  const popularMoviesUrl = `${process.env.API_URL}/3/discover/movie?include_adult=false&include_video=false&language=${defaultLanguage}&page=${currentPage}`
+function formatSortCriteria(sortCriteria: SortCriteria) {
+  switch(sortCriteria) {
+    case 'popularity':
+      return 'popularity.desc'
+    case 'title':
+      return 'title.asc'
+  }
+}
+
+async function getData(currentPage: number, sortCriteria: SortCriteria): Promise<PopularMoviesResult> {
+  let sortBy = formatSortCriteria(sortCriteria);
+
+  const popularMoviesUrl = `${process.env.API_URL}/3/discover/movie?include_adult=false&include_video=false&language=${defaultLanguage}&page=${currentPage}&sort_by=${sortBy}`
   const genresUrl = `${process.env.API_URL}/3/genre/movie/list?language=${defaultLanguage}`
 
   const [moviesResult, genresResult] = await Promise.all([
@@ -40,19 +52,22 @@ type HomeProps = {
   searchParams?: {
     page?: string,
     display?: DisplayMode
+    sortBy?: SortCriteria
   }
 }
 
 export default async function Home({ searchParams }: HomeProps) {
   const currentPage = Number(searchParams?.page) || 1
   const displayMode = searchParams?.display || 'grid'
+  const sortCriteria = searchParams?.sortBy || 'popularity'
 
-  const { results: movies, totalPages } = await getData(currentPage)
+  const { results: movies, totalPages } = await getData(currentPage, sortCriteria)
 
   return (
     <div>
       <h2 className="text-2xl mb-8">Les plus populaires</h2>
       <div className="flex justify-end">
+        <SortDropdown sortCriteria={sortCriteria} />
         <DisplaySwitch displayMode={displayMode} />
       </div>
       <MovieList movies={movies} displayMode={displayMode} />
