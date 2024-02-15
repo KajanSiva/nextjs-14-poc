@@ -129,13 +129,13 @@ export type MovieGenresResult = {
   genres: Genre[]
 }
 
-type MovieParticipedAsCast = RawMovieListItem & {
+export type MovieParticipedAsCast = RawMovieListItem & {
   character: string;
   credit_id: string;
   order: number;
 };
 
-type MovieParticipedAsCrew = RawMovieListItem & {
+export type MovieParticipedAsCrew = RawMovieListItem & {
   credit_id: string;
   department: string;
   job: string;

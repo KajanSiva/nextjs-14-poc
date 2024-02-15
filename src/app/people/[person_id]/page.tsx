@@ -1,7 +1,7 @@
 import Image from 'next/image'
-import { DetailedPerson } from "@/types/movies";
+import { DetailedPerson, MovieParticipedAsCast, MovieParticipedAsCrew } from "@/types/movies";
 import { defaultLanguage, fetchWithAuth } from "@/utils/dataFetching";
-import Slider from '@/components/Slider';
+import Carousel from '@/components/Carousel';
 
 async function getData(personId: number): Promise<DetailedPerson> {
   const personDetailUrl = `${process.env.API_URL}/3/person/${personId}?language=${defaultLanguage}&append_to_response=credits`
@@ -17,6 +17,22 @@ type PersonDetailProps = {
   }
 }
 
+function deduplicatedCredits(credits: (MovieParticipedAsCast | MovieParticipedAsCrew)[]) {
+  const uniqueIds: {
+    [key: string]: boolean;
+  } = {};
+
+  const deduplicatedCredits = credits.filter(item => {
+    if (!uniqueIds[item.id]) {
+      uniqueIds[item.id] = true
+      return true
+    }
+    return false
+  });
+
+  return deduplicatedCredits
+}
+
 export default async function PersonDetail({ params }: PersonDetailProps) {
   const personId = Number(params.person_id)
 
@@ -25,10 +41,10 @@ export default async function PersonDetail({ params }: PersonDetailProps) {
   const photoUrl = `${process.env.API_IMAGE_URL}/${process.env.API_IMAGE_POSTER_SIZE}/${person.profile_path}`
 
   let credits = [...person.credits.cast, ...person.credits.crew]
-  credits = credits.slice(0, 5)
+  credits = deduplicatedCredits(credits)
 
   const formattedCredits = credits.map((credit) => ({
-    image: credit.poster_path,
+    image: credit.poster_path ? `${process.env.API_IMAGE_URL}/${process.env.API_IMAGE_POSTER_SIZE}/${credit.poster_path}` : null,
     id: credit.id,
     content: credit.title,
   }))
@@ -57,7 +73,7 @@ export default async function PersonDetail({ params }: PersonDetailProps) {
       </div>
 
       <h3 className="text-xl mb-4">Connu pour</h3>
-      <Slider data={formattedCredits} linkPath='/movies/' />
+      <Carousel data={formattedCredits} linkPath='/movies/' />
     </div>
   );
 }

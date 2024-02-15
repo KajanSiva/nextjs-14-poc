@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import { DetailedMovie } from "@/types/movies";
 import { defaultLanguage, fetchWithAuth } from "@/utils/dataFetching";
-import Slider from '@/components/Slider';
+import Carousel from '@/components/Carousel';
 import Rating from '@/components/Rating';
 
 async function getData(movieId: number): Promise<DetailedMovie> {
@@ -28,15 +28,14 @@ export default async function MovieDetail({ params }: MovieDetailProps) {
   const posterUrl = `${process.env.API_IMAGE_URL}/${process.env.API_IMAGE_POSTER_SIZE}/${movie.poster_path}`
   const director = movie.credits.crew.find((member) => member.job === 'Director');
 
-  let credits = []
+  const credits = []
   if (director) {
     credits.push(director)
   }
   credits.push(...movie.credits.cast)
-  credits = credits.slice(0, 5)
 
   const formattedCredits = credits.map((credit) => ({
-    image: credit.profile_path,
+    image: credit.profile_path ? `${process.env.API_IMAGE_URL}/${process.env.API_IMAGE_POSTER_SIZE}/${credit.profile_path}` : null,
     id: credit.id,
     content: credit.name,
   }))
@@ -65,7 +64,7 @@ export default async function MovieDetail({ params }: MovieDetailProps) {
       </div>
 
       <h3 className="text-xl mb-4">Crédits</h3>
-      <Slider data={formattedCredits} linkPath='/people/' />
+      <Carousel data={formattedCredits} linkPath='/people/' />
     </div>
   );
 }
