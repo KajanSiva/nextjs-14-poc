@@ -128,3 +128,36 @@ export type Genre = {
 export type MovieGenresResult = {
   genres: Genre[]
 }
+
+type MovieParticipedAsCast = RawMovieListItem & {
+  character: string;
+  credit_id: string;
+  order: number;
+};
+
+type MovieParticipedAsCrew = RawMovieListItem & {
+  credit_id: string;
+  department: string;
+  job: string;
+};
+
+export type DetailedPerson = {
+  adult: boolean;
+  also_known_as: string[];
+  biography: string;
+  birthday: string | null;
+  deathday: string | null;
+  gender: number;
+  homepage: string | null;
+  id: number;
+  imdb_id: string;
+  known_for_department: string;
+  name: string;
+  place_of_birth: string;
+  popularity: number;
+  profile_path: string | null;
+  credits: {
+    cast: MovieParticipedAsCast[];
+    crew: MovieParticipedAsCrew[];
+  }
+};

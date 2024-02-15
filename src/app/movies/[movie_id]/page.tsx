@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import { DetailedMovie } from "@/types/movies";
 import { defaultLanguage, fetchWithAuth } from "@/utils/dataFetching";
+import Link from 'next/link';
 
 async function getData(movieId: number): Promise<DetailedMovie> {
   const movieDetailUrl = `${process.env.API_URL}/3/movie/${movieId}?language=${defaultLanguage}&append_to_response=credits`
@@ -61,7 +62,7 @@ export default async function MovieDetail({ params }: MovieDetailProps) {
         {credits.map((credit) => {
           const profileImageUrl = credit.profile_path ? `${process.env.API_IMAGE_URL}/${process.env.API_IMAGE_POSTER_SIZE}/${credit.profile_path}` : null
           return (
-            <div key={credit.id} className='w-[160px] h-[220px] relative group'>
+            <Link key={credit.id} className='w-[160px] h-[220px] relative group' href={`/people/${credit.id}`}>
               {profileImageUrl ? (
                 <div className="">
                   <Image
@@ -79,7 +80,7 @@ export default async function MovieDetail({ params }: MovieDetailProps) {
               >
                 <span className='text-white text-lg text-center'>{credit.name}</span>
               </div>
-            </div>
+            </Link>
           )
         })}
       </div>
