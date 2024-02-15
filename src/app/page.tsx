@@ -23,7 +23,7 @@ export default async function Home({ searchParams }: HomeProps) {
   return (
     <div>
       <h2 className="text-2xl mb-8">Les plus populaires</h2>
-      <div className="flex justify-end">
+      <div className="flex justify-end items-center gap-4">
         <SortDropdown sortCriteria={sortCriteria} />
         <DisplaySwitch displayMode={displayMode} />
       </div>

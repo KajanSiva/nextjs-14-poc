@@ -5,6 +5,7 @@ import { EmblaCarouselType } from 'embla-carousel'
 import Image from 'next/image'
 import Link from "next/link";
 import { useCallback, useEffect, useState } from 'react';
+import Button from './Button';
 
 type CarouselProps = {
   data: CarouselItem[];
@@ -46,13 +47,12 @@ export default function Carousel({ data, linkPath }: CarouselProps) {
 
   return (
     <div className='flex items-center gap-6 -mx-6 md:mx-0'>
-      <button
+      <Button
         disabled={prevBtnDisabled}
-        className='shrink-0 bg-gray-700 text-white text-lg rounded w-[40px] h-[40px] hidden md:block'
         onClick={scrollPrev}
       >
         {'<'}
-      </button>
+      </Button>
       <div className='overflow-hidden' ref={emblaRef}>
         <div className='flex gap-4 mx-4 md:mx-0'>
           {data.map((dataItem) => {
@@ -79,13 +79,12 @@ export default function Carousel({ data, linkPath }: CarouselProps) {
           })}
         </div>
       </div>
-      <button
+      <Button
         disabled={nextBtnDisabled}
-        className='shrink-0 bg-gray-700 text-white text-lg rounded w-[40px] h-[40px] hidden md:block'
         onClick={scrollNext}
       >
         {'>'}
-      </button>
+      </Button>
     </div>
   )
 }

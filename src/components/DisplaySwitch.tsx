@@ -4,6 +4,7 @@ import BarsIcon from "@/components/BarsIcon"
 import SquaresIcon from "@/components/SquaresIcon"
 import { DisplayMode } from "@/types/ui"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
+import Button from "./Button"
 
 type DisplaySwitchProps = {
   displayMode: DisplayMode
@@ -24,12 +25,12 @@ export default function DisplaySwitch({ displayMode }: DisplaySwitchProps) {
 
   return (
     <div className="md:flex gap-2 hidden">
-      <div data-testid="list-icon" className={displayMode === 'list' ? 'bg-slate-400' : '' } onClick={() => updateDisplayMode('list')}>
+      <Button dataTestId="list-icon" variant={displayMode === 'list' ? 'primary' : 'secondary' } onClick={() => updateDisplayMode('list')}>
         <BarsIcon />
-      </div>
-      <div data-testid="grid-icon" className={displayMode === 'grid' ? 'bg-slate-400' : '' } onClick={() => updateDisplayMode('grid')}>
+      </Button>
+      <Button dataTestId="grid-icon" variant={displayMode === 'grid' ? 'primary' : 'secondary' } onClick={() => updateDisplayMode('grid')}>
         <SquaresIcon />
-      </div>
+      </Button>
     </div>
   )
 }
