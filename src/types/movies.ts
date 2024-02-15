@@ -144,7 +144,7 @@ type MovieParticipedAsCrew = RawMovieListItem & {
 export type DetailedPerson = {
   adult: boolean;
   also_known_as: string[];
-  biography: string;
+  biography: string | null;
   birthday: string | null;
   deathday: string | null;
   gender: number;

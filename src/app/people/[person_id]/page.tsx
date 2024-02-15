@@ -48,7 +48,10 @@ export default async function PersonDetail({ params }: PersonDetailProps) {
         </div>
         <div className='shrink'>
           <p>{person.birthday} - {person.place_of_birth}</p>
-          <p className='max-w-[500px]'>Biographie: {person.biography}</p>
+          {person.biography ?
+            <p className='max-w-[500px]'>Biographie: {person.biography}</p> :
+            null
+          }
           <p><a className='text-blue-400' href={`https://www.imdb.com/name/${person.imdb_id}`} target='_blank'>Lien vers la page IMDB de la personne</a></p>
         </div>
       </div>

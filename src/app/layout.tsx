@@ -3,6 +3,7 @@ import Image from 'next/image'
 import logoImage from '../../public/images/logo.svg'
 import "./globals.css"
 import BackButton from "@/components/BackButton";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "nextjs-14-poc",
@@ -18,7 +19,7 @@ export default function RootLayout({
       <body>
         <main>
           <header className="flex justify-between align-middle px-6 py-4">
-            <div className="flex">
+            <Link className="flex" href="/">
               <Image
                 src={logoImage}
                 alt="Logo"
@@ -28,7 +29,7 @@ export default function RootLayout({
                 className="mr-2"
               />
               <h1 className="my-auto text-xl">NumIMDB</h1>
-            </div>
+            </Link>
             <BackButton />
           </header>
           <div className="p-6">
