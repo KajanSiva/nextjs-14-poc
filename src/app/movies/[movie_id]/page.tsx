@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import { DetailedMovie } from "@/types/movies";
 import { defaultLanguage, fetchWithAuth } from "@/utils/dataFetching";
-import Link from 'next/link';
+import Slider from '@/components/Slider';
 
 async function getData(movieId: number): Promise<DetailedMovie> {
   const movieDetailUrl = `${process.env.API_URL}/3/movie/${movieId}?language=${defaultLanguage}&append_to_response=credits`
@@ -34,6 +34,12 @@ export default async function MovieDetail({ params }: MovieDetailProps) {
   credits.push(...movie.credits.cast)
   credits = credits.slice(0, 5)
 
+  const formattedCredits = credits.map((credit) => ({
+    image: credit.profile_path,
+    id: credit.id,
+    content: credit.name,
+  }))
+
   return (
     <div>
       <h2 className="text-2xl mb-8">{movie.title} ({releaseYear}) - {genresString}</h2>
@@ -58,32 +64,7 @@ export default async function MovieDetail({ params }: MovieDetailProps) {
       </div>
 
       <h3 className="text-xl mb-4">Crédits</h3>
-      <div className='flex gap-4'>
-        {credits.map((credit) => {
-          const profileImageUrl = credit.profile_path ? `${process.env.API_IMAGE_URL}/${process.env.API_IMAGE_POSTER_SIZE}/${credit.profile_path}` : null
-          return (
-            <Link key={credit.id} className='w-[160px] h-[220px] relative group' href={`/people/${credit.id}`}>
-              {profileImageUrl ? (
-                <div className="">
-                  <Image
-                    src={profileImageUrl}
-                    alt={credit.name}
-                    fill
-                    unoptimized
-                    />
-                </div>
-              ) : null}
-              <div
-                className={
-                  `transition w-full h-full absolute bg-black bg-opacity-70 group-hover:opacity-100 duration-500 flex justify-center items-center ${!profileImageUrl ? 'opacity-100' : 'opacity-0'}`
-                }
-              >
-                <span className='text-white text-lg text-center'>{credit.name}</span>
-              </div>
-            </Link>
-          )
-        })}
-      </div>
+      <Slider data={formattedCredits} linkPath='/people/' />
     </div>
   );
 }
