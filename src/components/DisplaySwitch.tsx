@@ -24,10 +24,10 @@ export default function DisplaySwitch({ displayMode }: DisplaySwitchProps) {
 
   return (
     <div className="flex gap-2">
-      <div className={displayMode === 'list' ? 'bg-slate-400' : '' } onClick={() => updateDisplayMode('list')}>
+      <div data-testid="list-icon" className={displayMode === 'list' ? 'bg-slate-400' : '' } onClick={() => updateDisplayMode('list')}>
         <BarsIcon />
       </div>
-      <div className={displayMode === 'grid' ? 'bg-slate-400' : '' } onClick={() => updateDisplayMode('grid')}>
+      <div data-testid="grid-icon" className={displayMode === 'grid' ? 'bg-slate-400' : '' } onClick={() => updateDisplayMode('grid')}>
         <SquaresIcon />
       </div>
     </div>
