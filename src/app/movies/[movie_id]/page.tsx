@@ -50,6 +50,7 @@ export default async function MovieDetail({ params }: MovieDetailProps) {
             src={posterUrl}
             alt={`${movie.title} movie poster`}
             fill
+            style={{objectFit:"contain"}}
             unoptimized
             />
         </div>

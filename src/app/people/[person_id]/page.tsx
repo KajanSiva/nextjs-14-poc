@@ -59,6 +59,7 @@ export default async function PersonDetail({ params }: PersonDetailProps) {
             src={photoUrl}
             alt={person.name}
             fill
+            style={{objectFit:"contain"}}
             unoptimized
             />
         </div>

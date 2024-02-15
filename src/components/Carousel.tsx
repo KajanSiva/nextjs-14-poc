@@ -59,14 +59,13 @@ export default function Carousel({ data, linkPath }: CarouselProps) {
             return (
               <Link key={dataItem.id} className='w-[160px] h-[220px] relative group shrink-0' href={`${linkPath}${dataItem.id}`}>
                 {dataItem.image ? (
-                  <div className="">
                     <Image
                       src={dataItem.image}
                       alt={dataItem.content}
                       fill
+                      style={{objectFit:"contain"}}
                       unoptimized
                       />
-                  </div>
                 ) : null}
                 <div
                   className={

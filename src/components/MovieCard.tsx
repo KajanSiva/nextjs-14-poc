@@ -30,6 +30,7 @@ export default function MovieCard({ movie, displayMode }: MovieCardProps) {
             src={posterUrl}
             alt={`${movie.title} movie poster`}
             fill
+            style={{objectFit:"contain"}}
             unoptimized
           /> : null
         }
