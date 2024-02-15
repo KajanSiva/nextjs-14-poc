@@ -1,6 +1,7 @@
 'use client'
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import Button from "./Button";
 
 type PaginationProps = {
   currentPage: number,
@@ -43,12 +44,12 @@ export default function Pagination({ currentPage, totalPages }: PaginationProps)
   }
   
   return (
-    <div className="flex justify-center md:justify-end gap-4">
-      <button disabled={isFirstPage} onClick={() => updatePage('first')}>{'<<'}</button>
-      <button disabled={isFirstPage} onClick={() => updatePage('previous')}>{'<'}</button>
+    <div className="flex justify-center items-center md:justify-end gap-4">
+      <Button disabled={isFirstPage} onClick={() => updatePage('first')}>{'<<'}</Button>
+      <Button disabled={isFirstPage} onClick={() => updatePage('previous')}>{'<'}</Button>
       <p>Page {currentPage} sur {totalPages}</p>
-      <button disabled={isLastPage} onClick={() => updatePage('next')}>{'>'}</button>
-      <button disabled={isLastPage} onClick={() => updatePage('last')}>{'>>'}</button>
+      <Button disabled={isLastPage} onClick={() => updatePage('next')}>{'>'}</Button>
+      <Button disabled={isLastPage} onClick={() => updatePage('last')}>{'>>'}</Button>
     </div>
   )
 }
